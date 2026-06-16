@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aivyra Authentication</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+overflow:hidden;
+background:#f5f7fa;
+}
+
+/* LEFT PANEL */
+
+.left{
+width:50%;
+background:linear-gradient(135deg,#0b63d1,#3da1ff);
+color:white;
+padding:50px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:32px;
+font-weight:700;
+}
+
+.logo-box{
+width:42px;
+height:42px;
+background:rgba(255,255,255,.15);
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.content{
+max-width:550px;
+}
+
+.content h1{
+font-size:72px;
+font-weight:800;
+line-height:1.1;
+margin-bottom:20px;
+}
+
+.content p{
+font-size:28px;
+line-height:1.6;
+opacity:.95;
+}
+
+.footer{
+font-size:20px;
+opacity:.9;
+}
+
+/* RIGHT PANEL */
+
+.right{
+width:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f5f7fa;
+}
+
+.card{
+background:white;
+width:500px;
+padding:35px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.tabs{
+display:flex;
+background:#e8f4ff;
+padding:4px;
+border-radius:14px;
+margin-bottom:30px;
+}
+
+.tab{
+flex:1;
+padding:12px;
+border:none;
+background:transparent;
+cursor:pointer;
+font-size:18px;
+font-weight:600;
+border-radius:10px;
+}
+
+.tab.active{
+background:white;
+box-shadow:0 2px 5px rgba(0,0,0,.08);
+}
+
+.form{
+display:none;
+}
+
+.form.active{
+display:block;
+}
+
+h2{
+font-size:38px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:15px;
+margin-bottom:15px;
+border:1px solid #d8dee9;
+border-radius:12px;
+font-size:16px;
+outline:none;
+}
+
+input:focus{
+border-color:#1d7cf2;
+}
+
+.btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(to right,#0b63d1,#3da1ff);
+color:white;
+font-size:18px;
+font-weight:700;
+cursor:pointer;
+margin-top:5px;
+}
+
+.btn:hover{
+opacity:.95;
+}
+
+@media(max-width:900px){
+
+body{
+flex-direction:column;
+}
+
+.left,
+.right{
+width:100%;
+}
+
+.left{
+height:40vh;
+}
+
+.content h1{
+font-size:42px;
+}
+
+.content p{
+font-size:18px;
+}
+
+.card{
+width:90%;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LEFT SIDE -->
+
+<div class="left">
+
+<div class="logo">
+<div class="logo-box">🎓</div>
+Aivyra
+</div>
+
+<div class="content">
+<h1>Bridging skill gaps with AI.</h1>
+
+<p>
+Personalized learning, instant assessments,
+and a 24/7 AI tutor — built for rural learners.
+</p>
+</div>
+
+<div class="footer">
+© Aivyra
+</div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+
+<div class="right">
+
+<div class="card">
+
+<div class="tabs">
+<button class="tab active" onclick="showForm('signin',this)">Signin</button>
+<button class="tab" onclick="showForm('signup',this)">Signup</button>
+<button class="tab" onclick="showForm('forgot',this)">Forgot</button>
+</div>
+
+<!-- SIGN IN -->
+
+<div id="signin" class="form active">
+<h2>Welcome back</h2>
+
+<input type="email" placeholder="Email">
+<input type="password" placeholder="Password">
+
+<button class="btn">Sign in</button>
+</div>
+
+<!-- SIGN UP -->
+
+<div id="signup" class="form">
+<h2>Create your account</h2>
+
+<input type="text" placeholder="Full name">
+<input type="email" placeholder="Email">
+<input type="password" placeholder="Password (min 6)">
+
+<button class="btn">Create account</button>
+</div>
+
+<!-- FORGOT -->
+
+<div id="forgot" class="form">
+<h2>Reset password</h2>
+
+<input type="email" placeholder="Email">
+
+<button class="btn">Send reset link</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function showForm(id,element){
+
+document.querySelectorAll('.form')
+.forEach(form=>form.classList.remove('active'));
+
+document.querySelectorAll('.tab')
+.forEach(tab=>tab.classList.remove('active'));
+
+document.getElementById(id).classList.add('active');
+
+element.classList.add('active');
+}
+
+</script>
+
+</body>
+</html>

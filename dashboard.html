@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aivyra | AI-Powered Student Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-gradient: linear-gradient(135deg, #6366f1, #4f46e5);
+            --secondary-color: #10b981;
+            --secondary-gradient: linear-gradient(135deg, #10b981, #059669);
+            --accent-color: #ec4899;
+            --accent-gradient: linear-gradient(135deg, #ec4899, #db2777);
+            --info-color: #06b6d4;
+            --info-gradient: linear-gradient(135deg, #06b6d4, #0891b2);
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-color: #f8fafc;
+            --sidebar-gradient: linear-gradient(180deg, #1e1b4b, #312e81);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(229, 231, 235, 0.5);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --sidebar-text: #e2e8f0;
+            --sidebar-text-active: #ffffff;
+            --sidebar-item-active: rgba(255, 255, 255, 0.15);
+            --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 50px -10px rgba(99, 102, 241, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #090d16;
+            --sidebar-gradient: linear-gradient(180deg, #05070c, #0b0f19);
+            --card-bg: rgba(17, 24, 39, 0.75);
+            --card-border: rgba(55, 65, 81, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --sidebar-text: #94a3b8;
+            --sidebar-text-active: #ffffff;
+            --sidebar-item-active: rgba(99, 102, 241, 0.25);
+            --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism utility card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hover animation for premium interaction */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--sidebar-gradient);
+            padding: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+            transition: left 0.3s ease;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar-brand i {
+            font-size: 32px;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-brand h3 {
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .sidebar-link i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .sidebar-link.active {
+            background: var(--sidebar-item-active);
+            color: var(--sidebar-text-active);
+            border-left: 4px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Profile preview widget */
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-user img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-light);
+            object-fit: cover;
+        }
+
+        .sidebar-user-info {
+            line-height: 1.2;
+        }
+
+        .sidebar-user-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: white;
+        }
+
+        .sidebar-user-role {
+            font-size: 12px;
+            color: var(--sidebar-text);
+        }
+
+        /* Main Workspace Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header Styling */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .app-header-title h1 {
+            font-weight: 800;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .app-header-title p {
+            color: var(--text-secondary);
+            margin: 4px 0 0 0;
+            font-size: 16px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Modern toggler switches */
+        .theme-toggle-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+            background: var(--border-color);
+        }
+
+        /* Welcome Gradient Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #4f46e5, #818cf8, #ec4899);
+            color: white;
+            padding: 32px;
+            border-radius: var(--radius-md);
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .welcome-banner h2 {
+            font-weight: 800;
+            font-size: 28px;
+        }
+
+        .welcome-banner p {
+            opacity: 0.9;
+            font-size: 16px;
+            max-width: 600px;
+            margin-top: 10px;
+        }
+
+        /* Card Metric Stats */
+        .stat-icon {
+            font-size: 28px;
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-val {
+            font-weight: 800;
+            font-size: 32px;
+            color: var(--text-primary);
+        }
+
+        .stat-lbl {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* Badge/Indicator colors */
+        .indicator-math { background: rgba(99, 102, 241, 0.15); color: #6366f1; }
+        .indicator-english { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .indicator-science { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .indicator-tamil { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+
+        /* Custom Progress Bars */
+        .progress-bar-container {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dynamic SPA View Sections */
+        .view-section {
+            display: none;
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Recent Activity Table style */
+        .table-responsive {
+            background: transparent;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table th {
+            padding: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-color);
+            text-align: left;
+        }
+
+        .custom-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Profile View Styling */
+        .profile-pic-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px auto;
+        }
+
+        .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+        }
+
+        .profile-pic-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid var(--bg-color);
+        }
+
+        .profile-pic-upload input {
+            display: none;
+        }
+
+        /* AI Tutor Chatbot CSS */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 550px;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--card-border);
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            line-height: 1.5;
+            font-size: 15px;
+            animation: bubbleSlideIn 0.3s ease;
+        }
+
+        .message.incoming {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.outgoing {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-suggestions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            margin-top: 14px;
+        }
+
+        .chat-tag {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .chat-tag:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input-wrapper input {
+            flex-grow: 1;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--card-border);
+            padding: 14px 20px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .chat-send-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Quiz Engine styling */
+        .quiz-option {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            background: var(--border-color);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.08);
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--secondary-color);
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 0 2px var(--secondary-color);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger-color);
+            background: rgba(239, 68, 68, 0.08);
+            box-shadow: 0 0 0 2px var(--danger-color);
+        }
+
+        /* SVG Line Graph Styling */
+        .graph-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s linear forwards;
+        }
+
+        @keyframes drawLine {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Certificate Modal Design */
+        .certificate-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .certificate-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .certificate-sheet {
+            width: 100%;
+            max-width: 800px;
+            background: #ffffff;
+            border: 20px solid #1e1b4b;
+            padding: 60px;
+            position: relative;
+            color: #0b0f19;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            border-image: linear-gradient(135deg, #4f46e5, #818cf8, #ec4899) 20;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .certificate-modal.active .certificate-sheet {
+            transform: scale(1);
+        }
+
+        .cert-seal {
+            width: 120px;
+            margin: 0 auto 30px auto;
+        }
+
+        .cert-title {
+            font-family: 'Georgia', serif;
+            font-size: 38px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .cert-text {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .cert-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            text-decoration: underline;
+            color: #4f46e5;
+            margin: 15px 0;
+        }
+
+        .cert-signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .sig-block {
+            text-align: center;
+        }
+
+        .sig-line {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .sig-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        /* Toast notification */
+        .toast-notify {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notify.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Custom Toggle Switch for Dark Mode */
+        .theme-switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Mobile Hamburger trigger */
+        .mobile-header {
+            display: none;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--card-border);
+            padding: 16px 24px;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* Responsiveness overrides */
+        @media (max-width: 992px) {
+            .sidebar {
+                left: -280px;
+            }
+            .sidebar.show {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 24px 16px;
+            }
+            .mobile-header {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile Header Navigation -->
+    <div class="mobile-header">
+        <a href="#" class="sidebar-brand mb-0 text-dark" style="color: var(--text-primary) !important;">
+            <i class="fas fa-graduation-cap"></i>
+            <h3 class="d-inline-block text-primary">Aivyra</h3>
+        </a>
+        <button class="mobile-menu-btn" id="mobile-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar-nav">
+        <a href="#" class="sidebar-brand">
+            <i class="fas fa-graduation-cap"></i>
+            <h3>Aivyra</h3>
+        </a>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a class="sidebar-link active" data-target="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link" data-target="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link" data-target="courses">
+                    <i class="fas fa-book"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link" data-target="assessments">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Assessments</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link" data-target="ai-tutor">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Tutor</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link" data-target="progress">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Progress</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link" data-target="certificates">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certificates</span>
+                </a>
+            </li>
+            <li>
+                <a href="login.html" class="sidebar-link text-danger mt-4">
+                    <i class="fas fa-sign-out-alt text-danger"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Dark/Light Theme Switcher in Sidebar -->
+        <div class="theme-switch-container">
+            <i class="fas fa-moon text-light opacity-50 ms-2"></i>
+            <div class="form-check form-switch m-0 flex-grow-1 text-center">
+                <input class="form-check-input float-none" type="checkbox" id="theme-switch">
+            </div>
+            <i class="fas fa-sun text-warning"></i>
+        </div>
+
+        <div class="sidebar-user">
+            <img id="sidebar-avatar" src="https://randomuser.me/api/portraits/men/45.jpg" alt="User portrait">
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name" id="sidebar-username">John Student</div>
+                <div class="sidebar-user-role">Grade 10 Learner</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-content">
+
+        <!-- Top Header Panel -->
+        <div class="app-header">
+            <div class="app-header-title">
+                <h1 id="header-greeting">Welcome Back, John 👋</h1>
+                <p id="header-subtitle">Continue your personalized AI education journey.</p>
+            </div>
+            <div class="header-controls">
+                <span class="badge bg-secondary p-2 text-white font-weight-bold" id="language-badge">English Mode</span>
+                <button class="theme-toggle-btn" id="theme-toggle-top" title="Toggle theme">
+                    <i class="fas fa-sun text-warning" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: DASHBOARD PANEL                          -->
+        <!-- ============================================== -->
+        <div id="dashboard-view" class="view-section active">
+            
+            <!-- Banner Message -->
+            <div class="welcome-banner mb-4">
+                <h2>AI Learning Path Optimized!</h2>
+                <p>Based on your latest Math Assessment, we've updated your daily recommendations to address fractions and algebraic functions. You're on track to master your weak points!</p>
+            </div>
+
+            <!-- Dashboard Stats Grid -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="glass-card hover-lift h-100">
+                        <div class="stat-icon indicator-math">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div class="stat-val" id="stat-enrolled">3</div>
+                        <div class="stat-lbl">Active Courses</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="glass-card hover-lift h-100">
+                        <div class="stat-icon indicator-english">
+                            <i class="fas fa-percent"></i>
+                        </div>
+                        <div class="stat-val" id="stat-completion">65%</div>
+                        <div class="stat-lbl">Completion Rate</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="glass-card hover-lift h-100">
+                        <div class="stat-icon indicator-science">
+                            <i class="fas fa-circle-check"></i>
+                        </div>
+                        <div class="stat-val" id="stat-quizzes">12</div>
+                        <div class="stat-lbl">Quizzes Passed</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="glass-card hover-lift h-100">
+                        <div class="stat-icon indicator-tamil">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-val" id="stat-streak">8</div>
+                        <div class="stat-lbl">Daily Streak (Days)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lower dashboard split section -->
+            <div class="row">
+                <!-- Skill Gap Section -->
+                <div class="col-lg-6 mb-4">
+                    <div class="glass-card h-100">
+                        <h4 class="mb-4 fw-bold">Skill Gap Diagnostics</h4>
+                        <p class="text-secondary mb-4">AI-driven analysis of your accuracy ratios in major subject chapters.</p>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">Mathematics</span>
+                                <span class="text-danger fw-bold" id="gap-math">45%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill bg-danger" id="gap-bar-math" style="width: 45%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">English Grammar</span>
+                                <span class="text-warning fw-bold" id="gap-english">65%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill bg-warning" id="gap-bar-english" style="width: 65%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">Science & Physics</span>
+                                <span class="text-success fw-bold" id="gap-science">85%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill bg-success" id="gap-bar-science" style="width: 85%;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-semibold">Tamil Communication</span>
+                                <span class="text-primary fw-bold" id="gap-tamil">78%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill bg-primary" id="gap-bar-tamil" style="width: 78%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Path Actions -->
+                <div class="col-lg-6 mb-4">
+                    <div class="glass-card h-100 d-flex flex-column">
+                        <h4 class="mb-3 fw-bold">Recommended Roadmap</h4>
+                        <p class="text-secondary mb-4">Start learning personalized micro-topics based on gaps.</p>
+                        
+                        <div class="list-group list-group-flush flex-grow-1">
+                            <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 border-color py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="stat-icon indicator-math m-0 text-center" style="width: 40px; height: 40px; font-size: 16px;">
+                                        <i class="fas fa-square-root-variable"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-primary" style="color: var(--text-primary) !important;">Algebra Fundamentals</h6>
+                                        <small class="text-muted">Target: Linear Equations & Functions</small>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill start-recommendation" data-course="algebra">Start</button>
+                            </div>
+
+                            <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 border-color py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="stat-icon indicator-english m-0 text-center" style="width: 40px; height: 40px; font-size: 16px;">
+                                        <i class="fas fa-spell-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-primary" style="color: var(--text-primary) !important;">Tense & Verb Agreement</h6>
+                                        <small class="text-muted">Target: Subject-Verb Rules</small>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill start-recommendation" data-course="grammar">Start</button>
+                            </div>
+
+                            <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 border-color py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="stat-icon indicator-tamil m-0 text-center" style="width: 40px; height: 40px; font-size: 16px;">
+                                        <i class="fas fa-pen-nib"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-semibold text-primary" style="color: var(--text-primary) !important;">Tamil Grammar Practice</h6>
+                                        <small class="text-muted">Target: Sentence structure (Eluvai, Payanilai)</small>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary rounded-pill start-recommendation" data-course="tamil">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Log Table -->
+            <div class="glass-card mb-4">
+                <h4 class="mb-4 fw-bold">Recent Activities</h4>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Date Completed</th>
+                                <th>Chapter Activity</th>
+                                <th>Subject</th>
+                                <th>Diagnostic Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activity-table-body">
+                            <tr>
+                                <td>16 Jun 2026</td>
+                                <td>Algebra quiz completed</td>
+                                <td><span class="badge indicator-math">Mathematics</span></td>
+                                <td><span class="fw-semibold text-danger">45% (Gap Alert)</span></td>
+                            </tr>
+                            <tr>
+                                <td>14 Jun 2026</td>
+                                <td>English reading assessment</td>
+                                <td><span class="badge indicator-english">English</span></td>
+                                <td><span class="fw-semibold text-success">85% (Excellent)</span></td>
+                            </tr>
+                            <tr>
+                                <td>12 Jun 2026</td>
+                                <td>Physics - Force & Acceleration</td>
+                                <td><span class="badge indicator-science">Science</span></td>
+                                <td><span class="fw-semibold text-warning">60% (Moderate)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: PROFILE SETUP                            -->
+        <!-- ============================================== -->
+        <div id="profile-view" class="view-section">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="glass-card text-center">
+                        <div class="profile-pic-container">
+                            <img id="profile-avatar-preview" src="https://randomuser.me/api/portraits/men/45.jpg" alt="Profile Portrait">
+                            <label class="profile-pic-upload" for="avatar-input">
+                                <i class="fas fa-camera"></i>
+                                <input type="file" id="avatar-input" accept="image/*">
+                            </label>
+                        </div>
+                        <h4 class="fw-bold mb-1" id="profile-card-name">John Student</h4>
+                        <p class="text-secondary mb-3">Grade 10 Learner</p>
+                        <hr>
+                        <p class="text-muted text-start fs-6"><i class="fas fa-circle-info me-2 text-primary"></i>Your dashboard is personalized in real-time according to your settings.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 mb-4">
+                    <div class="glass-card">
+                        <h4 class="mb-4 fw-bold">Aivyra Student Profile Configuration</h4>
+                        
+                        <form id="profile-form">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Full Name</label>
+                                    <input type="text" class="form-control bg-transparent text-primary" id="input-name" value="John Student" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Email Address</label>
+                                    <input type="email" class="form-control bg-transparent text-primary" id="input-email" value="john.student@aivyra.edu" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Username</label>
+                                    <input type="text" class="form-control bg-transparent text-primary" id="input-username" value="john_learner">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Grade Level</label>
+                                    <select class="form-select bg-transparent text-primary" id="input-grade">
+                                        <option value="Grade 8">Grade 8</option>
+                                        <option value="Grade 9">Grade 9</option>
+                                        <option value="Grade 10" selected>Grade 10</option>
+                                        <option value="Grade 11">Grade 11</option>
+                                        <option value="Grade 12">Grade 12</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+                            <h5 class="fw-bold mb-3 text-primary">AI Localization Preferences</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Default Instruction Language</label>
+                                    <select class="form-select bg-transparent text-primary" id="input-lang">
+                                        <option value="English" selected>English</option>
+                                        <option value="Tamil">Tamil (தமிழ்)</option>
+                                    </select>
+                                    <div class="form-text text-muted">Updates the language of the AI Tutor and assessments.</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-semibold">Focus Subjects</label>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="pref-math" checked>
+                                            <label class="form-check-label" for="pref-math">Math</label>
+                                        </div>
+                                        <div class="form-check ms-3">
+                                            <input class="form-check-input" type="checkbox" id="pref-english" checked>
+                                            <label class="form-check-label" for="pref-english">English</label>
+                                        </div>
+                                        <div class="form-check ms-3">
+                                            <input class="form-check-input" type="checkbox" id="pref-science" checked>
+                                            <label class="form-check-label" for="pref-science">Science</label>
+                                        </div>
+                                        <div class="form-check ms-3">
+                                            <input class="form-check-input" type="checkbox" id="pref-tamil" checked>
+                                            <label class="form-check-label" for="pref-tamil">Tamil</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary px-4 py-2 mt-3">Save Profile Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: COURSES DIRECTORY                        -->
+        <!-- ============================================== -->
+        <div id="courses-view" class="view-section">
+            <h4 class="mb-4 fw-bold">My Personal Learning Curriculum</h4>
+            <div class="row" id="courses-container">
+                <!-- Courses loaded dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: DIAGNOSTIC ASSESSMENTS                   -->
+        <!-- ============================================== -->
+        <div id="assessments-view" class="view-section">
+            <div class="row">
+                <!-- Assessment selector list -->
+                <div class="col-lg-4 mb-4" id="assessment-selector-col">
+                    <div class="glass-card">
+                        <h4 class="fw-bold mb-3">Open Assessments</h4>
+                        <p class="text-secondary mb-4">Complete assessments to update your skill gaps and unlock certificate badges.</p>
+                        
+                        <div class="list-group gap-3" id="assessment-list">
+                            <!-- Math Quiz card -->
+                            <div class="list-group-item glass-card p-3 m-0 cursor-pointer border-indigo border hover-lift" onclick="prepareQuiz('math')">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="badge indicator-math">Math Diagnostic</span>
+                                    <span class="text-muted"><i class="fas fa-clock"></i> 5 mins</span>
+                                </div>
+                                <h6 class="fw-bold text-primary mb-1">Algebra & Linear Coordinates</h6>
+                                <p class="text-muted text-truncate mb-2">Evaluates quadratic roots, graphs, and linear slope calculations.</p>
+                                <span class="btn btn-sm btn-primary w-100">Take Assessment</span>
+                            </div>
+                            <!-- English Quiz Card -->
+                            <div class="list-group-item glass-card p-3 m-0 cursor-pointer border-warning border hover-lift" onclick="prepareQuiz('english')">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="badge indicator-english">English Diagnostic</span>
+                                    <span class="text-muted"><i class="fas fa-clock"></i> 5 mins</span>
+                                </div>
+                                <h6 class="fw-bold text-primary mb-1">Verbal Agreement & Tenses</h6>
+                                <p class="text-muted text-truncate mb-2">Tests syntax structures, tense identification, and prepositions.</p>
+                                <span class="btn btn-sm btn-primary w-100">Take Assessment</span>
+                            </div>
+                            <!-- Tamil Quiz Card -->
+                            <div class="list-group-item glass-card p-3 m-0 cursor-pointer border-pink border hover-lift" onclick="prepareQuiz('tamil')">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="badge indicator-tamil">Tamil Diagnostic</span>
+                                    <span class="text-muted"><i class="fas fa-clock"></i> 5 mins</span>
+                                </div>
+                                <h6 class="fw-bold text-primary mb-1">தமிழ் இலக்கண பயிற்சி (Grammar)</h6>
+                                <p class="text-muted text-truncate mb-2">Tests Eluvai, Payanilai, and basic sentence creation conventions.</p>
+                                <span class="btn btn-sm btn-primary w-100">Take Assessment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Quiz Area -->
+                <div class="col-lg-8 mb-4">
+                    <!-- Standard placeholder before starting quiz -->
+                    <div class="glass-card text-center py-5" id="quiz-intro-box">
+                        <i class="fas fa-laptop-code text-primary mb-4" style="font-size: 60px;"></i>
+                        <h3 class="fw-bold">Ready to assess?</h3>
+                        <p class="text-secondary max-width-600 mx-auto px-4 mt-2">Select an assessment from the left panel to begin. Your results directly feed into the recommendation engine to build customized roadmap items.</p>
+                    </div>
+
+                    <!-- Live Quiz Interface (Hidden initially) -->
+                    <div class="glass-card d-none" id="quiz-live-box">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="fw-bold m-0" id="quiz-title">Diagnostic Quiz</h4>
+                            <span class="badge bg-primary fs-6" id="quiz-timer">Timer: 5:00</span>
+                        </div>
+                        <div class="progress-bar-container mb-4">
+                            <div class="progress-bar-fill bg-primary" id="quiz-progress-bar" style="width: 20%;"></div>
+                        </div>
+                        <h5 class="fw-bold mb-4" id="quiz-question-text">Question template text goes here?</h5>
+                        
+                        <div id="quiz-options-wrapper">
+                            <!-- Loaded dynamic options -->
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-secondary" id="btn-quiz-quit" onclick="quitQuiz()">Quit Quiz</button>
+                            <button class="btn btn-primary" id="btn-quiz-next" onclick="nextQuizQuestion()" disabled>Next Question</button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Score card panel (Hidden initially) -->
+                    <div class="glass-card text-center py-5 d-none" id="quiz-result-box">
+                        <div id="quiz-result-icon">
+                            <i class="fas fa-trophy text-warning mb-4" style="font-size: 64px;"></i>
+                        </div>
+                        <h2 class="fw-bold">Assessment Complete!</h2>
+                        <p class="text-secondary" id="quiz-result-subtitle">You have completed the diagnostic examination.</p>
+                        <div class="display-3 fw-bold text-primary my-4" id="quiz-result-score">80%</div>
+                        <p id="quiz-result-analysis" class="px-4">Calculating analysis...</p>
+                        <button class="btn btn-primary mt-4 px-4" onclick="resetQuizView()">Return to Assessments</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: AI INTERACTIVE TUTOR CHAT                -->
+        <!-- ============================================== -->
+        <div id="ai-tutor-view" class="view-section">
+            <div class="row">
+                <div class="col-lg-3 mb-4">
+                    <div class="glass-card">
+                        <h5 class="fw-bold mb-3">Tutor Settings</h5>
+                        <label class="form-label text-muted">Response Mode</label>
+                        <select class="form-select bg-transparent text-primary mb-3" id="tutor-lang-mode" onchange="updateTutorLanguage()">
+                            <option value="en">English Tutor</option>
+                            <option value="ta">Tamil Tutor (தமிழ்)</option>
+                        </select>
+                        <label class="form-label text-muted">Subject Focus</label>
+                        <select class="form-select bg-transparent text-primary" id="tutor-subject-focus">
+                            <option value="math">Mathematics</option>
+                            <option value="english">English Grammar</option>
+                            <option value="science" selected>Physics & Science</option>
+                            <option value="tamil">Tamil Literature</option>
+                        </select>
+                        <hr class="my-3">
+                        <button class="btn btn-sm btn-outline-danger w-100" onclick="clearChat()">Clear Conversations</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-9 mb-4">
+                    <div class="glass-card chat-container">
+                        <div class="chat-messages" id="chat-box">
+                            <div class="message incoming">
+                                <strong>Aivyra AI:</strong> Hello! I am your AI learning assistant. How can I help you resolve concepts in Math, Science, English, or Tamil today?
+                            </div>
+                        </div>
+
+                        <!-- Prompt chips for easy clicks -->
+                        <div class="chat-suggestions" id="chat-prompts-container">
+                            <span class="chat-tag" onclick="sendPromptChip('Explain Newton\'s Second Law of Motion')">Explain Newton's Second Law</span>
+                            <span class="chat-tag" onclick="sendPromptChip('What is a quadratic function?')">What is a quadratic?</span>
+                            <span class="chat-tag" onclick="sendPromptChip('Give me an English subject-verb agreement rule')">Subject-Verb Agreement</span>
+                            <span class="chat-tag" onclick="sendPromptChip('தமிழ் எழுத்துக்கள் எத்தனை வகைப்படும்?')">தமிழ் எழுத்துக்கள்</span>
+                        </div>
+
+                        <div class="chat-input-wrapper">
+                            <input type="text" id="chat-input" placeholder="Type your learning question here..." onkeypress="handleChatKeyPress(event)">
+                            <button class="chat-send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: PROGRESS TRACKING & CHARTS               -->
+        <!-- ============================================== -->
+        <div id="progress-view" class="view-section">
+            <div class="row">
+                <!-- Performance stats summary -->
+                <div class="col-lg-4 mb-4">
+                    <div class="glass-card text-center">
+                        <h5 class="fw-bold mb-4">Accuracy Distribution</h5>
+                        
+                        <!-- Premium Circular SVG Chart -->
+                        <div class="position-relative d-inline-block mb-4" style="width: 160px; height: 160px;">
+                            <svg width="160" height="160" viewBox="0 0 160 160" class="transform -rotate-90">
+                                <circle cx="80" cy="80" r="70" stroke="var(--border-color)" stroke-width="12" fill="transparent" />
+                                <circle cx="80" cy="80" r="70" stroke="var(--primary-color)" stroke-width="12" fill="transparent" 
+                                    stroke-dasharray="440" stroke-dashoffset="110" id="progress-ring-circle" style="transition: stroke-dashoffset 1s ease;" />
+                            </svg>
+                            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                                <h3 class="fw-bold m-0" id="progress-ring-percent">75%</h3>
+                                <small class="text-muted">Mastery</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-around mt-2">
+                            <div>
+                                <h5 class="fw-bold m-0 text-success">85%</h5>
+                                <small class="text-muted">Science</small>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold m-0 text-warning">65%</h5>
+                                <small class="text-muted">English</small>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold m-0 text-danger">45%</h5>
+                                <small class="text-muted">Math</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning hours chart -->
+                <div class="col-lg-8 mb-4">
+                    <div class="glass-card">
+                        <h5 class="fw-bold mb-4">Weekly Study Hours (Interactive)</h5>
+                        
+                        <!-- Custom SVG Chart -->
+                        <div style="height: 180px; width: 100%; position: relative;">
+                            <svg viewBox="0 0 500 150" style="width: 100%; height: 100%; overflow: visible;">
+                                <!-- Grid Lines -->
+                                <line x1="0" y1="30" x2="500" y2="30" stroke="var(--border-color)" stroke-dasharray="5,5" />
+                                <line x1="0" y1="75" x2="500" y2="75" stroke="var(--border-color)" stroke-dasharray="5,5" />
+                                <line x1="0" y1="120" x2="500" y2="120" stroke="var(--border-color)" stroke-dasharray="5,5" />
+                                
+                                <!-- Line Graph -->
+                                <path d="M 10 120 L 90 90 L 170 110 L 250 40 L 330 60 L 410 30 L 490 20" 
+                                      fill="none" stroke="var(--primary-color)" stroke-width="4" stroke-linecap="round" class="graph-line" />
+                                
+                                <!-- Dots -->
+                                <circle cx="10" cy="120" r="5" fill="var(--primary-color)" />
+                                <circle cx="90" cy="90" r="5" fill="var(--primary-color)" />
+                                <circle cx="170" cy="110" r="5" fill="var(--primary-color)" />
+                                <circle cx="250" cy="40" r="5" fill="var(--accent-color)" />
+                                <circle cx="330" cy="60" r="5" fill="var(--primary-color)" />
+                                <circle cx="410" cy="30" r="5" fill="var(--primary-color)" />
+                                <circle cx="490" cy="20" r="5" fill="var(--secondary-color)" />
+                            </svg>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted fs-6 mt-3">
+                            <span>Mon</span>
+                            <span>Tue</span>
+                            <span>Wed</span>
+                            <span>Thu (Peak)</span>
+                            <span>Fri</span>
+                            <span>Sat</span>
+                            <span>Sun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Streak Dashboard Grid -->
+            <div class="glass-card mb-4">
+                <h5 class="fw-bold mb-4">Attendance Streak Heatmap</h5>
+                <div class="d-flex flex-wrap gap-2 justify-content-between" id="streak-heatmap-container">
+                    <!-- Loaded dynamically in JavaScript -->
+                </div>
+                <div class="d-flex justify-content-end gap-3 mt-3 text-muted fs-6">
+                    <span><i class="fas fa-circle text-muted opacity-25 me-1"></i> Inactive</span>
+                    <span><i class="fas fa-circle text-primary opacity-50 me-1"></i> Active</span>
+                    <span><i class="fas fa-circle text-success me-1"></i> Completed Goal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- VIEW: CERTIFICATES & REWARDS                   -->
+        <!-- ============================================== -->
+        <div id="certificates-view" class="view-section">
+            <h4 class="mb-4 fw-bold">Certifications & Badges Portfolio</h4>
+            <p class="text-secondary mb-4">Unlock certificates by completing course modules and achieving high scores in subject diagnostic assessments.</p>
+            
+            <div class="row" id="certificates-grid">
+                <!-- Dynamically loaded cert items -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Certificate viewer modal overlay -->
+    <div class="certificate-modal" id="cert-modal">
+        <div class="certificate-sheet">
+            <div class="text-end position-absolute" style="top: 20px; right: 20px;">
+                <button class="btn btn-close bg-light" onclick="closeCertModal()"></button>
+            </div>
+            
+            <i class="fas fa-ribbon text-warning cert-seal" style="font-size: 72px;"></i>
+            <div class="cert-title">CERTIFICATE OF ACHIEVEMENT</div>
+            <p class="cert-text">This is proudly awarded to</p>
+            <div class="cert-name" id="cert-modal-recipient">John Student</div>
+            <p class="cert-text mt-3">for demonstrating exemplary competence and completing the curriculum criteria for</p>
+            <h4 class="fw-bold text-dark" id="cert-modal-course">AI Platform Advanced Mastery</h4>
+            <p class="cert-text mt-3">Issued automatically by Aivyra Personalized Learning Diagnostics System.</p>
+            
+            <div class="cert-signatures">
+                <div class="sig-block">
+                    <div class="sig-line">Aivyra AI Core</div>
+                    <div class="sig-title">Automated AI Grader</div>
+                </div>
+                <div class="sig-block">
+                    <div class="sig-line">Dr. Raj Kumar</div>
+                    <div class="sig-title">Director of Education</div>
+                </div>
+            </div>
+
+            <div class="mt-5 text-center no-print">
+                <button class="btn btn-outline-primary" onclick="window.print()"><i class="fas fa-print me-2"></i>Print Certificate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast toast-notify -->
+    <div class="toast-notify" id="app-toast">Profile settings successfully updated!</div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // System state constants and memory
+        let state = {
+            user: {
+                name: "John Student",
+                email: "john.student@aivyra.edu",
+                username: "john_learner",
+                grade: "Grade 10",
+                language: "English",
+                subjects: { math: true, english: true, science: true, tamil: true }
+            },
+            courses: [
+                { id: "algebra", title: "Algebra Fundamentals", subject: "math", progress: 45, enrolled: true, badge: "Algebraic Basic" },
+                { id: "grammar", title: "English Grammar Practice", subject: "english", progress: 60, enrolled: true, badge: "Syntax Champ" },
+                { id: "science_basics", title: "Basic Science Concepts", subject: "science", progress: 85, enrolled: true, badge: "Force Master" },
+                { id: "logic", title: "Logical Reasoning & Quiz", subject: "science", progress: 0, enrolled: false, badge: "Logic Wizard" },
+                { id: "tamil_lit", title: "Tamil Literature & Structure", subject: "tamil", progress: 0, enrolled: false, badge: "தமிழ் காவலர்" }
+            ],
+            quizzesCompleted: 12,
+            streakDays: 8,
+            theme: "light"
+        };
+
+        // Simulated quiz questions data
+        const quizData = {
+            math: {
+                title: "Mathematics Diagnostic",
+                questions: [
+                    { q: "Solve for x: 2x + 7 = 15", opts: ["x = 3", "x = 4", "x = 5", "x = 8"], ans: 1 },
+                    { q: "What is the slope of the line passing through coordinates (1, 2) and (3, 6)?", opts: ["Slope = 2", "Slope = 3", "Slope = 1.5", "Slope = 4"], ans: 0 },
+                    { q: "What is the root of the function f(x) = 3x - 9?", opts: ["x = 0", "x = 3", "x = -3", "x = 9"], ans: 1 },
+                    { q: "Calculate the area of a right triangle with base 6cm and height 8cm.", opts: ["48 sq.cm", "24 sq.cm", "14 sq.cm", "36 sq.cm"], ans: 1 },
+                    { q: "Which of the following represents a quadratic equation?", opts: ["y = 3x + 2", "y = x² - 4", "y = 1/x", "y = √x"], ans: 1 }
+                ]
+            },
+            english: {
+                title: "English Diagnostic",
+                questions: [
+                    { q: "Choose the correct verb: Each of the students _______ submitted the project.", opts: ["has", "have", "were", "are"], ans: 0 },
+                    { q: "Identify the prepositions: She jumped _______ the fence and ran _______ the woods.", opts: ["over, into", "through, at", "on, in", "under, between"], ans: 0 },
+                    { q: "Identify the tense: 'I had been studying for three hours before she arrived.'", opts: ["Past Perfect", "Past Perfect Continuous", "Simple Past", "Past Continuous"], ans: 1 },
+                    { q: "Choose the correct spelling:", opts: ["Accomodation", "Accommodation", "Acomodation", "Accomodasion"], ans: 1 },
+                    { q: "Complete the sentence: If I _______ you, I would take the offer.", opts: ["was", "am", "were", "would be"], ans: 2 }
+                ]
+            },
+            tamil: {
+                title: "தமிழ் இலக்கணப் பயிற்சி (Tamil Quiz)",
+                questions: [
+                    { q: "வார்த்தையில் எழுவாய் என்பது எதைக் குறிக்கும்?", opts: ["பெயர்ச்சொல் (Noun)", "வினைச்சொல் (Verb)", "செயப்படுபொருள் (Object)", "அடைமொழி (Modifier)"], ans: 0 },
+                    { q: "தமிழ் மொழியில் உள்ள மெய்யெழுத்துக்களின் எண்ணிக்கை என்ன?", opts: ["12", "18", "30", "247"], ans: 1 },
+                    { q: "கீழ்க்கண்டவற்றுள் எது உயிர்மெய் எழுத்து?", opts: ["அ", "க்", "கா", "ஃ"], ans: 2 },
+                    { q: "சொல்லின் முதலில் வரும் எழுத்து எது?", opts: ["மெய் எழுத்து", "உயிர் எழுத்து", "ஆயுத எழுத்து", "சார்பெழுத்து"], ans: 1 },
+                    { q: "வினைமுற்று சொல்லைத் தேர்ந்தெடுக்கவும்:", opts: ["படித்தான்", "படித்த", "படித்து", "படிக்க"], ans: 0 }
+                ]
+            }
+        };
+
+        // Chatbot simulated responses dataset
+        const tutorResponses = {
+            en: {
+                hello: "I am Aivyra AI Tutor. Let me know which physics, math, or grammar formula you would like me to explain!",
+                newton: "Newton's Second Law states that acceleration of an object depends on two variables: the net force acting upon the object and the mass of the object. Formula: F = ma.",
+                quadratic: "A quadratic equation is a second-order polynomial equation in a single variable: ax² + bx + c = 0. Its graph forms a parabola.",
+                agreement: "Subject-Verb Agreement Rule: Singular subjects take singular verbs, and plural subjects take plural verbs. Example: 'The dog barks' (singular), 'The dogs bark' (plural).",
+                default: "Interesting question! Let's break that down. First, define the main terms of the concept, then evaluate the equations or grammar rules applicable. Can you specify which parts you find most difficult?"
+            },
+            ta: {
+                hello: "வணக்கம்! நான் ஐவிரா AI ஆசிரியர். உங்களுக்குக் கணிதம், அறிவியல் அல்லது தமிழ் இலக்கணத்தைப் பற்றி ஏதேனும் சந்தேகம் உள்ளதா?",
+                newton: "நியூட்டனின் இரண்டாம் விதி: ஒரு பொருளின் மீது செயல்படும் விசையானது அப்பொருளின் உந்த மாறுபாட்டு வீதத்திற்கு நேர்த்தகவில் அமையும். விசை = நிறை × முடுக்கம் (F = ma).",
+                quadratic: "இருபடிச் சமன்பாடு (Quadratic Equation) என்பது ax² + bx + c = 0 என்ற வடிவில் அமையும். இதன் வரைபடம் பரவளையமாக (parabola) இருக்கும்.",
+                agreement: "எழுவாயும் பயனிலையும் திணை, பால், எண் ஆகியவற்றில் இயைந்து வர வேண்டும். உதாரணம்: 'கண்ணன் வந்தான்' (ஆண்பால் ஒருமை). 'மாடுகள் மேய்ந்தன' (பன்மை).",
+                default: "மிகச் சிறந்த கேள்வி! இதை நாம் சுலபமாகப் புரிந்து கொள்வோம். முதலில் இதன் அடிப்படைக் கொள்கைகளை நாம் ஆராய வேண்டும். இதைப்பற்றி விரிவாக விளக்கட்டுமா?"
+            }
+        };
+
+        // Quiz session variables
+        let activeQuizType = "";
+        let currentQuestionIdx = 0;
+        let selectedOptionIdx = null;
+        let quizTimerVal = 300;
+        let quizTimerInterval = null;
+        let quizScores = [];
+
+        // Run when Document finishes loading
+        document.addEventListener("DOMContentLoaded", () => {
+            // Load state from localStorage if available
+            const savedState = localStorage.getItem("aivyra_student_state");
+            if (savedState) {
+                try {
+                    state = JSON.parse(savedState);
+                } catch (e) {
+                    console.error("Failed to parse local student state.", e);
+                }
+            }
+
+            // Sync HTML visual elements from state
+            syncThemeVisuals();
+            syncProfileUI();
+            renderCourses();
+            renderCertificates();
+            generateStreakHeatmap();
+
+            // Set up DOM interaction triggers
+            setupSidebarNav();
+            setupThemeToggles();
+            setupProfileForm();
+            setupAvatarUpload();
+            setupRecommendationRoadmap();
+        });
+
+        // SPA Navigation logic
+        function setupSidebarNav() {
+            const sidebarLinks = document.querySelectorAll(".sidebar-link[data-target]");
+            sidebarLinks.forEach(link => {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    
+                    // Close sidebar in mobile view
+                    document.getElementById("sidebar-nav").classList.remove("show");
+
+                    const target = link.getAttribute("data-target");
+                    
+                    // Toggle active classes on sidebar items
+                    sidebarLinks.forEach(l => l.classList.remove("active"));
+                    link.classList.add("active");
+
+                    // Toggle active view panel
+                    document.querySelectorAll(".view-section").forEach(view => {
+                        view.classList.remove("active");
+                    });
+                    
+                    const activeView = document.getElementById(`${target}-view`);
+                    if (activeView) {
+                        activeView.classList.add("active");
+                    }
+
+                    // Special actions when entering specific tabs
+                    if (target === "progress") {
+                        animateProgressRing();
+                    }
+                });
+            });
+
+            // Mobile menu toggler
+            document.getElementById("mobile-toggle").addEventListener("click", () => {
+                document.getElementById("sidebar-nav").classList.toggle("show");
+            });
+        }
+
+        // Theme controllers
+        function setupThemeToggles() {
+            const themeSwitch = document.getElementById("theme-switch");
+            const themeBtnTop = document.getElementById("theme-toggle-top");
+
+            themeSwitch.addEventListener("change", () => {
+                state.theme = themeSwitch.checked ? "dark" : "light";
+                syncThemeVisuals();
+                saveStateToLocalStorage();
+            });
+
+            themeBtnTop.addEventListener("click", () => {
+                state.theme = state.theme === "light" ? "dark" : "light";
+                themeSwitch.checked = (state.theme === "dark");
+                syncThemeVisuals();
+                saveStateToLocalStorage();
+            });
+        }
+
+        function syncThemeVisuals() {
+            const htmlNode = document.documentElement;
+            const themeIcon = document.getElementById("theme-icon");
+            const themeSwitch = document.getElementById("theme-switch");
+
+            htmlNode.setAttribute("data-theme", state.theme);
+            themeSwitch.checked = (state.theme === "dark");
+
+            if (state.theme === "dark") {
+                themeIcon.className = "fas fa-moon text-primary-light";
+            } else {
+                themeIcon.className = "fas fa-sun text-warning";
+            }
+        }
+
+        // Profile updates handler
+        function setupProfileForm() {
+            const form = document.getElementById("profile-form");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                // Get values
+                state.user.name = document.getElementById("input-name").value;
+                state.user.email = document.getElementById("input-email").value;
+                state.user.username = document.getElementById("input-username").value;
+                state.user.grade = document.getElementById("input-grade").value;
+                state.user.language = document.getElementById("input-lang").value;
+
+                state.user.subjects.math = document.getElementById("pref-math").checked;
+                state.user.subjects.english = document.getElementById("pref-english").checked;
+                state.user.subjects.science = document.getElementById("pref-science").checked;
+                state.user.subjects.tamil = document.getElementById("pref-tamil").checked;
+
+                // Sync layout values
+                syncProfileUI();
+                saveStateToLocalStorage();
+
+                // Launch Success Toast notification
+                showToast("Profile settings successfully updated!");
+            });
+        }
+
+        // Syncs all profile texts
+        function syncProfileUI() {
+            document.getElementById("sidebar-username").textContent = state.user.name;
+            document.getElementById("profile-card-name").textContent = state.user.name;
+            document.getElementById("header-greeting").textContent = `Welcome Back, ${state.user.name.split(" ")[0]} 👋`;
+            document.getElementById("language-badge").textContent = `${state.user.language} Mode`;
+
+            // Form bindings
+            document.getElementById("input-name").value = state.user.name;
+            document.getElementById("input-email").value = state.user.email;
+            document.getElementById("input-username").value = state.user.username;
+            document.getElementById("input-grade").value = state.user.grade;
+            document.getElementById("input-lang").value = state.user.language;
+
+            document.getElementById("pref-math").checked = state.user.subjects.math;
+            document.getElementById("pref-english").checked = state.user.subjects.english;
+            document.getElementById("pref-science").checked = state.user.subjects.science;
+            document.getElementById("pref-tamil").checked = state.user.subjects.tamil;
+
+            // Load localized elements
+            if (state.user.language === "Tamil") {
+                document.getElementById("header-subtitle").textContent = "உங்களது சுய கற்றல் பாதையைத் தொடருங்கள்.";
+                document.getElementById("tutor-lang-mode").value = "ta";
+                updateTutorLanguage();
+            } else {
+                document.getElementById("header-subtitle").textContent = "Continue your personalized AI education journey.";
+                document.getElementById("tutor-lang-mode").value = "en";
+                updateTutorLanguage();
+            }
+        }
+
+        // Profile Avatar preview loader
+        function setupAvatarUpload() {
+            const avatarInput = document.getElementById("avatar-input");
+            avatarInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const avatarUrl = event.target.result;
+                        document.getElementById("profile-avatar-preview").src = avatarUrl;
+                        document.getElementById("sidebar-avatar").src = avatarUrl;
+                        
+                        // Save in state & localStorage (caution: Base64 size limits apply)
+                        try {
+                            state.user.avatar = avatarUrl;
+                            saveStateToLocalStorage();
+                        } catch(err) {
+                            console.warn("Base64 Avatar string too large for localStorage size limits.");
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Load saved avatar from state
+            if (state.user.avatar) {
+                document.getElementById("profile-avatar-preview").src = state.user.avatar;
+                document.getElementById("sidebar-avatar").src = state.user.avatar;
+            }
+        }
+
+        // Render Personalised Learning Path list
+        function setupRecommendationRoadmap() {
+            const recommendationBtns = document.querySelectorAll(".start-recommendation");
+            recommendationBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const courseKey = btn.getAttribute("data-course");
+                    
+                    // Redirect to Courses view panel
+                    const sidebarCoursesLink = document.querySelector(".sidebar-link[data-target='courses']");
+                    if (sidebarCoursesLink) {
+                        sidebarCoursesLink.click();
+                    }
+
+                    // Auto scroll or target course
+                    showToast(`Starting roadmap topic: ${courseKey.toUpperCase()}`);
+                });
+            });
+        }
+
+        // Render Courses List Grid
+        function renderCourses() {
+            const container = document.getElementById("courses-container");
+            container.innerHTML = "";
+
+            state.courses.forEach(course => {
+                // Determine CSS badge type
+                let badgeClass = "indicator-math";
+                if (course.subject === "english") badgeClass = "indicator-english";
+                if (course.subject === "science") badgeClass = "indicator-science";
+                if (course.subject === "tamil") badgeClass = "indicator-tamil";
+
+                const isEnrolled = course.enrolled;
+                const buttonText = isEnrolled ? "Resume Module" : "Enroll Now";
+                const buttonClass = isEnrolled ? "btn-primary" : "btn-outline-primary";
+
+                const cardHtml = `
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="glass-card hover-lift h-100 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge ${badgeClass}">${course.subject.toUpperCase()}</span>
+                                <span class="text-muted fs-6"><i class="fas fa-award me-1"></i> ${course.badge}</span>
+                            </div>
+                            <h5 class="fw-bold mb-2">${course.title}</h5>
+                            <p class="text-secondary small flex-grow-1">This module guides you through core curriculum definitions, simulated interactive examples, and real-time AI Tutor queries.</p>
+                            
+                            <div class="mt-3 mb-4">
+                                <div class="d-flex justify-content-between mb-1 small text-secondary">
+                                    <span>Progress</span>
+                                    <span>${course.progress}%</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill bg-primary" style="width: ${course.progress}%;"></div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn ${buttonClass} w-100" onclick="toggleCourseEnrollment('${course.id}')">${buttonText}</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+
+            // Update stats
+            const activeCoursesCount = state.courses.filter(c => c.enrolled).length;
+            document.getElementById("stat-enrolled").textContent = activeCoursesCount;
+        }
+
+        function toggleCourseEnrollment(courseId) {
+            const course = state.courses.find(c => c.id === courseId);
+            if (course) {
+                if (!course.enrolled) {
+                    course.enrolled = true;
+                    course.progress = 10;
+                    showToast(`Successfully enrolled in ${course.title}!`);
+                } else {
+                    // Simulate progress increase
+                    course.progress = Math.min(course.progress + 20, 100);
+                    showToast(`Progress updated for ${course.title}!`);
+                    
+                    // If course hits 100%, check for certificates
+                    if (course.progress === 100) {
+                        showToast(`Congratulations! You completed ${course.title}!`);
+                        renderCertificates();
+                    }
+                }
+                saveStateToLocalStorage();
+                renderCourses();
+            }
+        }
+
+        // ==============================================
+        // QUIZ DIAGNOSTIC CONTROLLER
+        // ==============================================
+        function prepareQuiz(quizKey) {
+            activeQuizType = quizKey;
+            currentQuestionIdx = 0;
+            selectedOptionIdx = null;
+            quizTimerVal = 300; // 5 mins
+
+            // Show live quiz frame, hide intro/results
+            document.getElementById("quiz-intro-box").classList.add("d-none");
+            document.getElementById("quiz-result-box").classList.add("d-none");
+            document.getElementById("quiz-live-box").classList.remove("d-none");
+
+            // Load initial question
+            loadQuizQuestion();
+
+            // Set up timer interval
+            if (quizTimerInterval) clearInterval(quizTimerInterval);
+            quizTimerInterval = setInterval(() => {
+                quizTimerVal--;
+                const mins = Math.floor(quizTimerVal / 60);
+                const secs = quizTimerVal % 60;
+                document.getElementById("quiz-timer").textContent = `Timer: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                
+                if (quizTimerVal <= 0) {
+                    clearInterval(quizTimerInterval);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function loadQuizQuestion() {
+            const activeQuiz = quizData[activeQuizType];
+            const questionObj = activeQuiz.questions[currentQuestionIdx];
+            
+            document.getElementById("quiz-title").textContent = activeQuiz.title;
+            document.getElementById("quiz-question-text").textContent = `Q${currentQuestionIdx + 1}: ${questionObj.q}`;
+            
+            // Progress bar calc
+            const progressPct = ((currentQuestionIdx + 1) / activeQuiz.questions.length) * 100;
+            document.getElementById("quiz-progress-bar").style.width = `${progressPct}%`;
+
+            // Load options list HTML
+            const optionsWrapper = document.getElementById("quiz-options-wrapper");
+            optionsWrapper.innerHTML = "";
+            selectedOptionIdx = null;
+            document.getElementById("btn-quiz-next").disabled = true;
+
+            questionObj.opts.forEach((opt, idx) => {
+                const optHtml = `
+                    <div class="quiz-option" id="opt-${idx}" onclick="selectQuizOption(${idx})">
+                        <span class="badge bg-secondary rounded-circle">${String.fromCharCode(65 + idx)}</span>
+                        <span>${opt}</span>
+                    </div>
+                `;
+                optionsWrapper.innerHTML += optHtml;
+            });
+        }
+
+        function selectQuizOption(idx) {
+            // Highlight selected option
+            document.querySelectorAll(".quiz-option").forEach(opt => {
+                opt.classList.remove("selected");
+            });
+
+            const targetOpt = document.getElementById(`opt-${idx}`);
+            if (targetOpt) {
+                targetOpt.classList.add("selected");
+            }
+
+            selectedOptionIdx = idx;
+            document.getElementById("btn-quiz-next").disabled = false;
+        }
+
+        function nextQuizQuestion() {
+            const activeQuiz = quizData[activeQuizType];
+            const currentQ = activeQuiz.questions[currentQuestionIdx];
+
+            // Score evaluation
+            currentQ.userSelection = selectedOptionIdx;
+
+            if (currentQuestionIdx < activeQuiz.questions.length - 1) {
+                currentQuestionIdx++;
+                loadQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function quitQuiz() {
+            clearInterval(quizTimerInterval);
+            resetQuizView();
+        }
+
+        function finishQuiz() {
+            clearInterval(quizTimerInterval);
+            document.getElementById("quiz-live-box").classList.add("d-none");
+            document.getElementById("quiz-result-box").classList.remove("d-none");
+
+            const activeQuiz = quizData[activeQuizType];
+            let correctCount = 0;
+            activeQuiz.questions.forEach(q => {
+                if (q.userSelection === q.ans) {
+                    correctCount++;
+                }
+            });
+
+            const finalPct = Math.round((correctCount / activeQuiz.questions.length) * 100);
+            
+            // Update UI scores
+            document.getElementById("quiz-result-score").textContent = `${finalPct}%`;
+            
+            // Update states and dynamic Skill Gaps
+            if (activeQuizType === "math") {
+                state.user.subjects.math = true;
+                document.getElementById("gap-math").textContent = `${finalPct}%`;
+                document.getElementById("gap-bar-math").className = `progress-bar-fill ${finalPct < 50 ? 'bg-danger' : finalPct < 75 ? 'bg-warning' : 'bg-success'}`;
+                document.getElementById("gap-bar-math").style.width = `${finalPct}%`;
+                
+                // If score is high, make recommendations list lighter
+                document.getElementById("quiz-result-analysis").innerHTML = finalPct >= 70 ? 
+                    "Excellent! Your math proficiency has improved. We've removed basic linear recommendations from your track." : 
+                    "AI Analysis: We suggest working on linear slopes and quadratic equations with the AI Tutor.";
+            } else if (activeQuizType === "english") {
+                document.getElementById("gap-english").textContent = `${finalPct}%`;
+                document.getElementById("gap-bar-english").className = `progress-bar-fill ${finalPct < 50 ? 'bg-danger' : finalPct < 75 ? 'bg-warning' : 'bg-success'}`;
+                document.getElementById("gap-bar-english").style.width = `${finalPct}%`;
+                document.getElementById("quiz-result-analysis").textContent = "Subject-verb constraints registered in recommendation module.";
+            } else if (activeQuizType === "tamil") {
+                document.getElementById("gap-tamil").textContent = `${finalPct}%`;
+                document.getElementById("gap-bar-tamil").className = `progress-bar-fill ${finalPct < 50 ? 'bg-danger' : finalPct < 75 ? 'bg-warning' : 'bg-success'}`;
+                document.getElementById("gap-bar-tamil").style.width = `${finalPct}%`;
+                document.getElementById("quiz-result-analysis").textContent = "Tamil grammar feedback integrated with dynamic roadmap.";
+            }
+
+            // Sync database stats
+            state.quizzesCompleted += 1;
+            state.streakDays += 1;
+            document.getElementById("stat-quizzes").textContent = state.quizzesCompleted;
+            document.getElementById("stat-streak").textContent = state.streakDays;
+            
+            saveStateToLocalStorage();
+            renderCertificates();
+            generateStreakHeatmap();
+        }
+
+        function resetQuizView() {
+            document.getElementById("quiz-live-box").classList.add("d-none");
+            document.getElementById("quiz-result-box").classList.add("d-none");
+            document.getElementById("quiz-intro-box").classList.remove("d-none");
+        }
+
+
+        // ==============================================
+        // AI CHATBOT INTERFACE ENGINE
+        // ==============================================
+        function updateTutorLanguage() {
+            const mode = document.getElementById("tutor-lang-mode").value;
+            const chatBox = document.getElementById("chat-box");
+            
+            // Re-fill greetings based on mode
+            chatBox.innerHTML = `
+                <div class="message incoming">
+                    <strong>Aivyra AI:</strong> ${tutorResponses[mode].hello}
+                </div>
+            `;
+
+            // Swap suggestions tags
+            const tagsWrapper = document.getElementById("chat-prompts-container");
+            tagsWrapper.innerHTML = "";
+
+            if (mode === "ta") {
+                tagsWrapper.innerHTML = `
+                    <span class="chat-tag" onclick="sendPromptChip('நியூட்டனின் இரண்டாம் விதி பற்றி விளக்கு')">விசை (Newton)</span>
+                    <span class="chat-tag" onclick="sendPromptChip('இருபடிச் சமன்பாடு என்றால் என்ன?')">இருபடிச் சமன்பாடு</span>
+                    <span class="chat-tag" onclick="sendPromptChip('தமிழ் எழுத்துக்கள் எத்தனை வகைப்படும்?')">தமிழ் எழுத்துக்கள்</span>
+                `;
+            } else {
+                tagsWrapper.innerHTML = `
+                    <span class="chat-tag" onclick="sendPromptChip('Explain Newton\'s Second Law of Motion')">Explain Newton's Second Law</span>
+                    <span class="chat-tag" onclick="sendPromptChip('What is a quadratic function?')">What is a quadratic?</span>
+                    <span class="chat-tag" onclick="sendPromptChip('Give me an English subject-verb agreement rule')">Subject-Verb Agreement</span>
+                `;
+            }
+        }
+
+        function sendPromptChip(text) {
+            document.getElementById("chat-input").value = text;
+            sendMessage();
+        }
+
+        function handleChatKeyPress(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const inputField = document.getElementById("chat-input");
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            const chatBox = document.getElementById("chat-box");
+
+            // Append User prompt
+            chatBox.innerHTML += `
+                <div class="message outgoing">
+                    ${text}
+                </div>
+            `;
+
+            inputField.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Trigger typing simulation
+            simulateTypingIndicator();
+
+            setTimeout(() => {
+                removeTypingIndicator();
+                const mode = document.getElementById("tutor-lang-mode").value;
+                const normalizedText = text.toLowerCase();
+                let reply = tutorResponses[mode].default;
+
+                // Match rules
+                if (normalizedText.includes("newton") || normalizedText.includes("விதி") || normalizedText.includes("law")) {
+                    reply = tutorResponses[mode].newton;
+                } else if (normalizedText.includes("quadratic") || normalizedText.includes("இருபடி")) {
+                    reply = tutorResponses[mode].quadratic;
+                } else if (normalizedText.includes("agreement") || normalizedText.includes("verb") || normalizedText.includes("எழுவாய்")) {
+                    reply = tutorResponses[mode].agreement;
+                } else if (normalizedText.includes("தமிழ் எழுத்துக்கள்")) {
+                    reply = "தமிழ் எழுத்துக்கள் மொத்தம் 247 ஆகும். அவை: உயிர் எழுத்துக்கள் (12), மெய் எழுத்துக்கள் (18), உயிர்மெய் எழுத்துக்கள் (216), மற்றும் ஆயுத எழுத்து (1) என வகைப்படுத்தப்படும்.";
+                }
+
+                chatBox.innerHTML += `
+                    <div class="message incoming">
+                        <strong>Aivyra AI:</strong> ${reply}
+                    </div>
+                `;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1200);
+        }
+
+        function simulateTypingIndicator() {
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `
+                <div class="message incoming" id="typing-indicator">
+                    <span class="text-muted"><i class="fas fa-circle-notch fa-spin me-2"></i>Aivyra is typing...</span>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById("typing-indicator");
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function clearChat() {
+            updateTutorLanguage();
+        }
+
+        // ==============================================
+        // PROGRESS SVG GRAPH ANIMATIONS
+        // ==============================================
+        function animateProgressRing() {
+            const scorePct = 75; // overall mock metric
+            const ringCircle = document.getElementById("progress-ring-circle");
+            
+            // Formula for SVG stroke offset: (2 * PI * r) * (1 - (pct / 100))
+            const radius = 70;
+            const circumference = 2 * Math.PI * radius; // ~439.8
+            const offset = circumference - (scorePct / 100) * circumference;
+
+            ringCircle.style.strokeDasharray = circumference;
+            ringCircle.style.strokeDashoffset = offset;
+            document.getElementById("progress-ring-percent").textContent = `${scorePct}%`;
+        }
+
+        function generateStreakHeatmap() {
+            const container = document.getElementById("streak-heatmap-container");
+            container.innerHTML = "";
+
+            // Render mock streak history calendar blocks (30 blocks)
+            for (let i = 1; i <= 28; i++) {
+                let statusClass = "opacity-25 bg-secondary";
+                if (i <= state.streakDays) {
+                    statusClass = "bg-primary opacity-75";
+                    if (i % 5 === 0) statusClass = "bg-success";
+                }
+
+                const dayHtml = `
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded ${statusClass}" style="width: 28px; height: 28px; transition: all 0.3s ease;"></div>
+                        <span class="text-muted small mt-1" style="font-size: 10px;">Day ${i}</span>
+                    </div>
+                `;
+                container.innerHTML += dayHtml;
+            }
+        }
+
+        // ==============================================
+        // CERTIFICATE CONTROLLER
+        // ==============================================
+        function renderCertificates() {
+            const grid = document.getElementById("certificates-grid");
+            grid.innerHTML = "";
+
+            // Check how many courses have progress == 100
+            state.courses.forEach(course => {
+                const isEarned = (course.progress === 100);
+                const opacityStyle = isEarned ? "" : "opacity-50 grayscale";
+                const btnHtml = isEarned ? 
+                    `<button class="btn btn-sm btn-primary mt-3 w-100" onclick="viewCertificate('${course.title}')">View Certificate</button>` : 
+                    `<button class="btn btn-sm btn-outline-secondary mt-3 w-100" disabled>Progress ${course.progress}%</button>`;
+
+                const certCard = `
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="glass-card text-center hover-lift ${opacityStyle}">
+                            <i class="fas fa-medal text-warning" style="font-size: 48px; margin-bottom: 16px;"></i>
+                            <h5 class="fw-bold">${course.title} Certificate</h5>
+                            <p class="text-secondary small mt-2">Personalized mastery badge: "${course.badge}"</p>
+                            ${btnHtml}
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += certCard;
+            });
+        }
+
+        function viewCertificate(courseName) {
+            document.getElementById("cert-modal-recipient").textContent = state.user.name;
+            document.getElementById("cert-modal-course").textContent = courseName;
+            document.getElementById("cert-modal").classList.add("active");
+        }
+
+        function closeCertModal() {
+            document.getElementById("cert-modal").classList.remove("active");
+        }
+
+        // Global Toast alert
+        function showToast(msg) {
+            const toast = document.getElementById("app-toast");
+            toast.textContent = msg;
+            toast.classList.add("show");
+            
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // Memory database storage helper
+        function saveStateToLocalStorage() {
+            localStorage.setItem("aivyra_student_state", JSON.stringify(state));
+        }
+    </script>
+</body>
+</html>
